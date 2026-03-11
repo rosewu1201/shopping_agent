@@ -1,0 +1,32 @@
+{
+  "test@example.com": {
+    "name": "Test User",
+    "email": "test@example.com",
+    "passwordHash": "e1907cfbe6c4ced1e8d2abc123bacbc2bafea47e9a7d5b1b7fbd3269bd95e5d9",
+    "passwordSalt": "5457b13b8adf13e012b0777917998c33",
+    "verified": true,
+    "role": "user",
+    "createdAt": 1772470155236,
+    "verifiedAt": 1772470185516
+  },
+  "wu-xy21@mails.tsinghua.edu.cn": {
+    "name": "Xiaoya Wu",
+    "email": "wu-xy21@mails.tsinghua.edu.cn",
+    "passwordHash": "6e24396eb92de88ea2b51c5beb632f0d2a4eaa7f28b46b97e8867f2eeaba2131",
+    "passwordSalt": "f8e2f38d9ed01a5cbf26273de2e8c597",
+    "verified": true,
+    "role": "admin",
+    "createdAt": 1772472017544,
+    "verifiedAt": 1772472157972
+  },
+  "admin-test@test.com": {
+    "name": "Admin Test",
+    "email": "admin-test@test.com",
+    "passwordHash": "5b43763c1f4267b33ffc0582210409713c204d8eafb9c8a1f61efc371936d91a",
+    "passwordSalt": "42f947bf0dff30c8bde342318f426960",
+    "verified": true,
+    "role": "user",
+    "createdAt": 1773131878969,
+    "verifiedAt": 1773131892442
+  }
+}
