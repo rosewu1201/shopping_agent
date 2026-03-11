@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Barbie Collector Hub</title>
+<style>
+  :root {
+    --pink-50: #FFF0F6; --pink-100: #FFE0ED; --pink-200: #FFC2DB;
+    --pink-300: #FF94BD; --pink-400: #FF5C9A; --pink-500: #E91E90;
+    --pink-600: #E0218A; --pink-700: #C41977; --pink-800: #A11362;
+    --bg: #FEFBFC; --card-bg: #FFFFFF;
+    --text-primary: #1A0A10; --text-secondary: #5C3D4E; --text-muted: #9B7A8A;
+    --border: #F0D0E0; --danger: #DC3545; --success: #28a745;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius: 12px; --shadow: 0 2px 12px rgba(26,10,16,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; }
+
+  .header {
+    background: var(--card-bg); border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: var(--shadow);
+  }
+  .header h1 { font-size: 1.2rem; font-weight: 700; }
+  .header h1 span { color: var(--pink-600); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .back-link { color: var(--pink-600); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+  .back-link:hover { text-decoration: underline; }
+  .admin-badge { padding: 4px 10px; background: var(--pink-100); color: var(--pink-700); border-radius: 100px; font-size: 0.72rem; font-weight: 600; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .login-box {
+    max-width: 420px; margin: 4rem auto; background: var(--card-bg);
+    border-radius: var(--radius); padding: 2.5rem; box-shadow: var(--shadow);
+    border: 1px solid var(--border); text-align: center;
+  }
+  .login-box h2 { margin-bottom: 0.5rem; font-size: 1.3rem; }
+  .login-box p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; text-align: left; }
+  .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+  .form-group input {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 0.9rem; font-family: var(--font-body); outline: none; transition: border-color 0.2s;
+  }
+  .form-group input:focus { border-color: var(--pink-400); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 20px; border-radius: 100px; font-size: 0.85rem; font-weight: 600;
+    border: none; cursor: pointer; font-family: var(--font-body); transition: all 0.25s;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--pink-600), var(--pink-500)); color: #fff; width: 100%; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(224,33,138,0.35); }
+  .btn-sm { padding: 6px 14px; font-size: 0.75rem; border-radius: 8px; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text-secondary); }
+  .btn-outline:hover { background: var(--pink-50); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { opacity: 0.9; }
+  .btn-success { background: var(--success); color: #fff; }
+
+  .error-msg { color: var(--danger); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.25rem; text-align: center; box-shadow: var(--shadow);
+  }
+  .stat-card .stat-number { font-size: 2rem; font-weight: 700; color: var(--pink-600); }
+  .stat-card .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+  .section { margin-bottom: 2rem; }
+  .section-title {
+    font-size: 1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--pink-100);
+  }
+
+  .user-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .user-table th {
+    text-align: left; padding: 12px 16px; background: var(--pink-50);
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-muted); border-bottom: 1px solid var(--border);
+  }
+  .user-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: middle; }
+  .user-table tr:last-child td { border-bottom: none; }
+  .user-table tr:hover td { background: var(--pink-50); }
+
+  .role-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 0.72rem; font-weight: 600;
+  }
+  .role-admin { background: var(--pink-100); color: var(--pink-700); }
+  .role-user { background: #E8F5E9; color: #2E7D32; }
+
+  .actions { display: flex; gap: 6px; }
+
+  .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; }
+
+  .toast {
+    position: fixed; bottom: 20px; right: 20px; padding: 12px 20px;
+    background: var(--text-primary); color: #fff; border-radius: 8px; font-size: 0.85rem;
+    opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 640px) {
+    .container { padding: 1rem; }
+    .user-table { font-size: 0.78rem; }
+    .user-table th, .user-table td { padding: 8px 10px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Barbie <span>Collector Hub</span> &mdash; Admin</h1>
+  <div class="header-right">
+    <span class="admin-badge" id="adminName"></span>
+    <a href="/" class="back-link">&larr; Back to site</a>
+    <button class="btn btn-sm btn-outline" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- Login form (shown when not authenticated) -->
+<div id="loginSection" class="login-box" style="display:none">
+  <h2>Admin Login</h2>
+  <p>Sign in with an admin account to manage users.</p>
+  <div class="form-group">
+    <label>Email Address</label>
+    <input type="email" id="loginEmail" placeholder="admin@example.com">
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" id="loginPass" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()">
+  </div>
+  <button class="btn btn-primary" onclick="doLogin()">Log In</button>
+  <div class="error-msg" id="loginError"></div>
+</div>
+
+<!-- Admin dashboard (shown when authenticated) -->
+<div id="dashSection" class="container" style="display:none">
+
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-number" id="statTotal">-</div><div class="stat-label">Total Users</div></div>
+    <div class="stat-card"><div class="stat-number" id="statAdmins">-</div><div class="stat-label">Admins</div></div>
+    <div class="stat-card"><div class="stat-number" id="statRegular">-</div><div class="stat-label">Regular Users</div></div>
+    <div class="stat-card"><div class="stat-number" id="statPending">-</div><div class="stat-label">Pending Verification</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Verified Users</div>
+    <table class="user-table" id="usersTable">
+      <thead>
+        <tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="usersBody"></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pending Verification</div>
+    <table class="user-table" id="pendingTable">
+      <thead>
+        <tr><th>Name</th><th>Email</th><th>Signed Up</th><th>Code Expires</th></tr>
+      </thead>
+      <tbody id="pendingBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let token = localStorage.getItem('barbie-admin-token');
+let currentAdmin = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function formatDate(ts) {
+  if (!ts) return '-';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+async function apiCall(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  if (token) opts.headers['Authorization'] = `Bearer ${token}`;
+  if (body) opts.body = JSON.stringify(body);
+
+  const res = await fetch(path, opts);
+  const data = await res.json();
+
+  if (res.status === 401 || res.status === 403) {
+    token = null;
+    localStorage.removeItem('barbie-admin-token');
+    showUI();
+    showToast(data.error || 'Session expired. Please log in again.');
+    return null;
+  }
+  return data;
+}
+
+function showUI() {
+  const loginSec = document.getElementById('loginSection');
+  const dashSec = document.getElementById('dashSection');
+
+  if (token) {
+    loginSec.style.display = 'none';
+    dashSec.style.display = 'block';
+    loadDashboard();
+  } else {
+    loginSec.style.display = 'block';
+    dashSec.style.display = 'none';
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+
+  if (!email || !pass) { errEl.textContent = 'Email and password are required.'; return; }
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass }),
+    });
+    const data = await res.json();
+
+    if (!data.success) { errEl.textContent = data.error || 'Login failed.'; return; }
+    if (!data.token) { errEl.textContent = 'No token returned. Server may need updating.'; return; }
+    if (data.user.role !== 'admin') { errEl.textContent = 'This account does not have admin privileges.'; return; }
+
+    token = data.token;
+    currentAdmin = data.user;
+    localStorage.setItem('barbie-admin-token', token);
+    // Also sync with main site
+    localStorage.setItem('barbie-user', JSON.stringify(data.user));
+    localStorage.setItem('barbie-token', token);
+    showUI();
+  } catch (e) {
+    errEl.textContent = 'Connection error. Please try again.';
+  }
+}
+
+function doLogout() {
+  token = null;
+  currentAdmin = null;
+  localStorage.removeItem('barbie-admin-token');
+  showUI();
+}
+
+async function loadDashboard() {
+  // Load stats and users in parallel
+  const [statsData, usersData, pendingData] = await Promise.all([
+    apiCall('GET', '/api/admin/stats'),
+    apiCall('GET', '/api/admin/users'),
+    apiCall('GET', '/api/admin/pending'),
+  ]);
+
+  if (!statsData) return;
+
+  // Stats
+  document.getElementById('statTotal').textContent = statsData.totalVerified || 0;
+  document.getElementById('statAdmins').textContent = statsData.admins || 0;
+  document.getElementById('statRegular').textContent = statsData.regularUsers || 0;
+  document.getElementById('statPending').textContent = statsData.totalPending || 0;
+
+  // Admin name badge
+  if (usersData && usersData.users) {
+    // Find current user from token
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      document.getElementById('adminName').textContent = payload.name || payload.email;
+      currentAdmin = payload;
+    } catch (e) {}
+  }
+
+  // Users table
+  const usersBody = document.getElementById('usersBody');
+  if (usersData && usersData.users && usersData.users.length > 0) {
+    usersBody.innerHTML = usersData.users
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+      .map(u => `
+        <tr>
+          <td><strong>${esc(u.name)}</strong></td>
+          <td>${esc(u.email)}</td>
+          <td><span class="role-badge role-${u.role || 'user'}">${u.role || 'user'}</span></td>
+          <td>${formatDate(u.verifiedAt || u.createdAt)}</td>
+          <td class="actions">
+            ${u.role === 'admin'
+              ? `<button class="btn btn-sm btn-outline" onclick="changeRole('${esc(u.email)}','user')" title="Demote to user">Demote</button>`
+              : `<button class="btn btn-sm btn-outline" onclick="changeRole('${esc(u.email)}','admin')" title="Promote to admin">Promote</button>`
+            }
+            <button class="btn btn-sm btn-danger" onclick="removeUser('${esc(u.email)}','${esc(u.name)}')" title="Delete user">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+  } else {
+    usersBody.innerHTML = '<tr><td colspan="5" class="empty-state">No verified users yet.</td></tr>';
+  }
+
+  // Pending table
+  const pendingBody = document.getElementById('pendingBody');
+  if (pendingData && pendingData.pending && pendingData.pending.length > 0) {
+    pendingBody.innerHTML = pendingData.pending.map(u => `
+      <tr>
+        <td>${esc(u.name)}</td>
+        <td>${esc(u.email)}</td>
+        <td>${formatDate(u.createdAt)}</td>
+        <td>${u.codeExpiresAt > Date.now() ? 'Active' : 'Expired'}</td>
+      </tr>
+    `).join('');
+  } else {
+    pendingBody.innerHTML = '<tr><td colspan="4" class="empty-state">No pending verifications.</td></tr>';
+  }
+}
+
+async function changeRole(email, newRole) {
+  const action = newRole === 'admin' ? 'promote' : 'demote';
+  if (!confirm(`Are you sure you want to ${action} ${email} to "${newRole}"?`)) return;
+
+  const data = await apiCall('PUT', `/api/admin/users/${encodeURIComponent(email)}/role`, { role: newRole });
+  if (data && data.success) {
+    showToast(`${email} is now ${newRole}.`);
+    loadDashboard();
+  } else if (data) {
+    showToast(data.error || 'Failed to update role.');
+  }
+}
+
+async function removeUser(email, name) {
+  if (!confirm(`Are you sure you want to delete user "${name}" (${email})? This cannot be undone.`)) return;
+
+  const data = await apiCall('DELETE', `/api/admin/users/${encodeURIComponent(email)}`);
+  if (data && data.success) {
+    showToast(`User ${email} has been deleted.`);
+    loadDashboard();
+  } else if (data) {
+    showToast(data.error || 'Failed to delete user.');
+  }
+}
+
+function esc(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+// Initialize
+showUI();
+</script>
+</body>
+</html>
