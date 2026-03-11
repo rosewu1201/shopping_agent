@@ -1,0 +1,12 @@
+{
+  "rosupwu@gmail.com": {
+    "name": "111",
+    "email": "rosupwu@gmail.com",
+    "passwordHash": "65343d56298520678b348f1dcf02f67e5c855aa70cb87caf10b6ee4ca94ecd6d",
+    "passwordSalt": "d9d5d8f3e2af5853ccade746dba72032",
+    "verificationCode": "646894",
+    "codeExpiresAt": 1773133114736,
+    "createdAt": 1773132214736,
+    "attempts": 0
+  }
+}
